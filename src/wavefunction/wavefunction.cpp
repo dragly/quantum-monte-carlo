@@ -27,6 +27,7 @@ void WaveFunction::updateNextLaplace() {
     updateNextLaplaceNumerically();
 }
 
+
 void WaveFunction::updateNextGradientNumerically() {
     double h = m_numericalDifferenceStep;
     mat positionsPlus = m_nextPositions;

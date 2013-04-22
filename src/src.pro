@@ -3,11 +3,19 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-LIBS += -larmadillo -llapack -lblas
+include(../defaults.pri)
 
 SOURCES += main.cpp \
-    wavefunction/wavefunction.cpp
+    wavefunction/wavefunction.cpp \
+    wavefunction/hydrogen/hydrogenwavefunction.cpp \
+    wavefunction/slater.cpp \
+    wavefunction/orbital.cpp \
+    wavefunction/hydrogen/hydrogenorbital.cpp
 
 HEADERS += \
-    wavefunction/wavefunction.h
+    wavefunction/wavefunction.h \
+    wavefunction/hydrogen/hydrogenwavefunction.h \
+    wavefunction/slater.h \
+    wavefunction/orbital.h \
+    wavefunction/hydrogen/hydrogenorbital.h
 

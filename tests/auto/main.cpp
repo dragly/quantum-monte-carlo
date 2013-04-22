@@ -1,10 +1,9 @@
-#include <QString>
-#include <QtTest>
-
 #include <iostream>
 #include <iomanip>
 
 #include <src/wavefunction/wavefunction.h>
+
+#include <unittest++/UnitTest++.h>
 
 using namespace std;
 class DummyWaveFunction : public WaveFunction {
@@ -20,24 +19,7 @@ public:
     }
 };
 
-class WaveFunctionTest : public QObject
-{
-    Q_OBJECT
-
-public:
-    WaveFunctionTest();
-
-private Q_SLOTS:
-    void testEvaluationRatio();
-    void testNumericalGradient();
-    void testNumericalLaplace();
-};
-
-WaveFunctionTest::WaveFunctionTest()
-{
-}
-
-void WaveFunctionTest::testEvaluationRatio()
+TEST(testEvaluationRatio)
 {
     DummyWaveFunction wf(2,3,3);
     mat positions = { 1,2,3,4,5,6 };
@@ -50,34 +32,38 @@ void WaveFunctionTest::testEvaluationRatio()
     wf.setNextPositions(positions2);
     wf.updateNextEvaluation();
 
-    QVERIFY2(fabs(wf.evaluationRatio() - 1.5274725274725274) < 1e-6, "Error!");
+    CHECK(fabs(wf.evaluationRatio() - 1.5274725274725274) < 1e-6);
 }
 
-void WaveFunctionTest::testNumericalGradient() {
+TEST(testNumericalGradient) {
     DummyWaveFunction wf(2,3,3);
     mat positions = { 1,2,3,4,5,6 };
     positions.reshape(2,3);
     wf.setNextPositions(positions);
     wf.initialize();
+    wf.updateNextGradientNumerically();
 
     mat correctGradient = {2,4,6,8,10,12};
     correctGradient.reshape(2,3);
 
     mat difference = abs(wf.nextGradient() - correctGradient);
 
-    QVERIFY2(difference.min() < 1e-4, "Failure!");
+    CHECK(difference.min() < 1e-4);
 }
 
-void WaveFunctionTest::testNumericalLaplace() {
+TEST(testNumericalLaplace) {
     DummyWaveFunction wf(2,3,3);
     mat positions = { 1,2,3,4,5,6 };
     positions.reshape(2,3);
     wf.setNextPositions(positions);
     wf.initialize();
+    wf.updateNextLaplaceNumerically();
 
-    QVERIFY2(fabs(wf.nextLaplace() - 12) < 1e-4, "Failure!");
+    CHECK(fabs(wf.nextLaplace() - 12) < 1e-4);
 }
 
-QTEST_APPLESS_MAIN(WaveFunctionTest)
+int main()
+{
+    return UnitTest::RunAllTests();
+}
 
-#include "tst_wavefunctiontest.moc"
